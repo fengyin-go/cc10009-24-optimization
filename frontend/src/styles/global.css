@@ -35,3 +35,17 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+
+.head-operator { margin-right: 12px; color: var(--muted); }
+.head-operator select { margin-left: 4px; }
+.readonly-note { color: var(--muted); font-size: 12px; }
+.batch-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.batch-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 13px; }
+.batch-tag { background: #eef2f7; border-radius: 999px; padding: 2px 10px; font-size: 12px; }
+.batch-tag.warn { background: #fef3c7; color: #92400e; }
+.batch-tag.danger { background: #fee4e2; color: #b42318; }
+.batch-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.log-list { margin: 0; padding-left: 18px; font-size: 12px; color: #344054; }
+.log-list li { margin: 2px 0; }
+.form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
+.form-row label span { display: block; font-size: 12px; color: var(--muted); }

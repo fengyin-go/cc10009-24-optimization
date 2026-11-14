@@ -11,7 +11,17 @@
     <main class="app-main">
       <header class="app-head">
         <span class="head-desc">离线版采集配置管理工具，涵盖站点管理、抽取模板编排、代理池配置、限速策略、重试机制、增量采集与数据落盘规则，所有配置持久化到浏览器本地存储。</span>
-        <span class="head-user">当前值班：{{ store.operator }} · {{ store.shiftLabel }}</span>
+        <span class="head-user">
+          <label class="head-operator">
+            操作人
+            <select :value="store.operator" @change="switchOperator">
+              <option v-for="actor in store.actorOptions" :key="actor.name" :value="actor.name">
+                {{ actor.name }}（{{ actor.role }}）
+              </option>
+            </select>
+          </label>
+          当前值班：{{ store.operator }} · {{ store.shiftLabel }}
+        </span>
       </header>
       <RouterView />
     </main>
@@ -23,5 +33,10 @@ import { useSessionStore } from '@/stores/session'
 
 const store = useSessionStore()
 
-const navItems = [{ label: "运营概览", path: "/" }, { label: "站点管理", path: "/site" }, { label: "抽取模板", path: "/template" }, { label: "代理池管理", path: "/proxy" }, { label: "采集任务", path: "/spider" }, { label: "调度策略", path: "/schedule" }, { label: "反爬对抗", path: "/antibot" }, { label: "限速控制", path: "/ratelimit" }, { label: "失败重试", path: "/retry" }, { label: "字段映射", path: "/extractor" }, { label: "采集流水线", path: "/pipeline" }, { label: "结果校验", path: "/validator" }, { label: "数据落盘", path: "/storage" }, { label: "采集监控", path: "/monitor" }, { label: "数据清洗", path: "/cleanse" }, { label: "增量采集", path: "/delta" }, { label: "数据分发", path: "/export" }, { label: "RPA流程", path: "/rpaflow" }, { label: "登录凭证", path: "/auth" }]
+function switchOperator(event: Event) {
+  const target = event.target as HTMLSelectElement
+  store.setOperator(target.value)
+}
+
+const navItems = [{ label: "运营概览", path: "/" }, { label: "站点管理", path: "/site" }, { label: "抽取模板", path: "/template" }, { label: "代理池管理", path: "/proxy" }, { label: "采集任务", path: "/spider" }, { label: "调度策略", path: "/schedule" }, { label: "反爬对抗", path: "/antibot" }, { label: "识别记录", path: "/recognition" }, { label: "限速控制", path: "/ratelimit" }, { label: "失败重试", path: "/retry" }, { label: "字段映射", path: "/extractor" }, { label: "采集流水线", path: "/pipeline" }, { label: "结果校验", path: "/validator" }, { label: "数据落盘", path: "/storage" }, { label: "采集监控", path: "/monitor" }, { label: "数据清洗", path: "/cleanse" }, { label: "增量采集", path: "/delta" }, { label: "数据分发", path: "/export" }, { label: "RPA流程", path: "/rpaflow" }, { label: "登录凭证", path: "/auth" }]
 </script>

@@ -1,5 +1,6 @@
 import { MODULE_BY_KEY } from '@/data/modules'
 import { allRows, listRows, resetRows, saveRows } from '@/data/local-store'
+import { strategyPermission, type Actor } from '@/data/permissions'
 import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } from '@/data/types'
 
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
@@ -28,7 +29,7 @@ export function listEntries(key: string, filters: Record<string, string> = {}): 
   return { items: matched, total: matched.length, page: 1, size: matched.length }
 }
 
-export function runAction(key: string, id: number, action: string): ActionResult {
+export function runAction(key: string, id: number, action: string, actor?: Actor): ActionResult {
   const meta = moduleMeta(key)
   const target = meta.actionTargets[action]
   if (!target) {
@@ -38,6 +39,16 @@ export function runAction(key: string, id: number, action: string): ActionResult
   const index = rows.findIndex((row) => Number(row.id) === id)
   if (index < 0) {
     return { ok: false, message: `没有找到编号为 ${id} 的${meta.entity}` }
+  }
+  // 对抗策略的启停归属目标站点，只有站点负责人可以操作，其他角色只读。
+  if (key === 'antibot') {
+    if (!actor) {
+      return { ok: false, message: '对抗策略的启停需要先指定操作人' }
+    }
+    const permission = strategyPermission(actor, rows[index])
+    if (!permission.allowed) {
+      return { ok: false, message: permission.reason }
+    }
   }
   const current = String(rows[index].status)
   if (current === target) {
@@ -54,6 +65,28 @@ export function runAction(key: string, id: number, action: string): ActionResult
   next[index] = updated
   saveRows(key, next)
   return { ok: true, message: `${meta.entity}已${action}，当前状态「${target}」` }
+}
+
+// 修改对抗策略字段同样按站点归属鉴权；跨站点负责人与共享角色一律拒绝。
+export function updateStrategyField(
+  id: number,
+  field: string,
+  value: string,
+  actor: Actor,
+): ActionResult {
+  const rows = listRows('antibot')
+  const index = rows.findIndex((row) => Number(row.id) === id)
+  if (index < 0) {
+    return { ok: false, message: `没有找到编号为 ${id} 的对抗策略` }
+  }
+  const permission = strategyPermission(actor, rows[index])
+  if (!permission.allowed) {
+    return { ok: false, message: permission.reason }
+  }
+  const next = [...rows]
+  next[index] = { ...rows[index], [field]: value }
+  saveRows('antibot', next)
+  return { ok: true, message: `对抗策略 ${rows[index]['策略编号']} 的${field}已更新为 ${value}` }
 }
 
 export function resetModule(key: string): PageResult {

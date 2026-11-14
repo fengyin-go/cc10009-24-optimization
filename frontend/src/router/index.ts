@@ -7,6 +7,7 @@ const Proxy = () => import('@/views/proxy/index.vue')
 const Spider = () => import('@/views/spider/index.vue')
 const Schedule = () => import('@/views/schedule/index.vue')
 const Antibot = () => import('@/views/antibot/index.vue')
+const Recognition = () => import('@/views/recognition/index.vue')
 const Ratelimit = () => import('@/views/ratelimit/index.vue')
 const Retry = () => import('@/views/retry/index.vue')
 const Extractor = () => import('@/views/extractor/index.vue')
@@ -30,6 +31,7 @@ const router = createRouter({
     { path: '/spider', name: 'spider', component: Spider },
     { path: '/schedule', name: 'schedule', component: Schedule },
     { path: '/antibot', name: 'antibot', component: Antibot },
+    { path: '/recognition', name: 'recognition', component: Recognition },
     { path: '/ratelimit', name: 'ratelimit', component: Ratelimit },
     { path: '/retry', name: 'retry', component: Retry },
     { path: '/extractor', name: 'extractor', component: Extractor },
